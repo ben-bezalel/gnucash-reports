@@ -63,14 +63,12 @@
     #t
     (if (not (gnc-account-is-root acct))
       (parent-check (gnc-account-get-parent acct) searchstr)
-      #f)
-))
+      #f)))
 
 (define (level-one-print acct)	    
   (if (> (gnc-account-get-current-depth acct) 1)
     (level-one-print (gnc-account-get-parent acct))
-    acct  
-))
+    acct))
 
 ;;this takes a list of accounts and returns a filtered list with only accounts
 ;;which contain Income in the name or have a parent that contains Income 
@@ -79,21 +77,17 @@
     '()
     (if (parent-check (car lst) searchstr) 
       (cons (car lst) (account-name-filter (cdr lst) searchstr))
-      (account-name-filter (cdr lst) searchstr)
-    )
-))
+      (account-name-filter (cdr lst) searchstr))))
 
 ;;this works through each of the originally selected accounts and gets all their
-;;descendants to look for accounts containing Income in the name
+;;descendants to look for accounts containing the search string in the name
 (define (filtered-accounts lst sublst searchstr)
   (if (null? lst)
       sublst 
       (filtered-accounts 
         (cdr lst) 
         (append sublst (account-name-filter (gnc-account-get-descendants (car lst)) searchstr))
-        searchstr
-        )
-      ))
+        searchstr)))
 
 (define (remove-duplicates lst removed)
   (if (null? lst)
